@@ -24,4 +24,13 @@
 }
 
 
+- (IBAction)btnStartRecord:(id)sender {
+    AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
+    [audioPlugin audioPluginStartRecord];
+}
+
+- (IBAction)btnStopRecord:(id)sender {
+    AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
+    [audioPlugin audioPluginStopRecord];
+}
 @end

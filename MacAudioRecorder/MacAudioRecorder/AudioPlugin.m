@@ -79,6 +79,9 @@ static AudioPlugin *_sharedInstance;
     NSLog(@"Hauoli - In function audioPluginStartRecord.");
     if( !isRecording && recordSession == nil)
     {
+        NSLog(@"Hauoli - Start internal audio writer...");
+        [self initAudioWriter];
+        
         NSLog(@"Hauoli - Start video recording...");
         recordSession = [self getRecordSession];
         
@@ -141,13 +144,16 @@ static AudioPlugin *_sharedInstance;
     }
 }
 
-// Initialize audio writer (must be called after setting up the audio input
+// Initialize audio writer (must be called after setting up the audio input)
 - (void) initAudioWriter
 {
     NSLog(@"Hauoli - In function initAudioWriter.");
     if(internalAudioWriter == nil) {
         NSError * error = nil;
-        NSURL *url = [NSURL fileURLWithPath:@"/Users/lguan/Desktop/Hauoli/MacOSAudioRecorder/data/data.wav"];
+        NSURL *url = [NSURL fileURLWithPath:@"data.wav"];
+        //NSURL * documentDirectoryUrl = [NSFileManager.defaultManager URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+        //NSURL * url = [documentDirectoryUrl URLByAppendingPathComponent:@"data.wav"];
+        
         internalAudioWriter = [[AVAssetWriter alloc] initWithURL:url
                                   fileType:AVFileTypeWAVE
                                      error:&error];
@@ -163,7 +169,10 @@ static AudioPlugin *_sharedInstance;
                                [ NSNumber numberWithInt: kAudioFormatLinearPCM ], AVFormatIDKey,
                                [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
                                [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
-                               [ NSNumber numberWithInt: 64000 ], AVEncoderBitRateKey,
+                               [ NSNumber numberWithBool: NO], AVLinearPCMIsFloatKey,
+                               [ NSNumber numberWithBool: NO], AVLinearPCMIsNonInterleaved,
+                               [ NSNumber numberWithInt: 16], AVLinearPCMBitDepthKey,
+                               [ NSNumber numberWithBool: NO], AVLinearPCMIsBigEndianKey,
                                [ NSData dataWithBytes: &acl length: sizeof(acl) ], AVChannelLayoutKey,
                                nil];
         internalAudioWriterInput = [AVAssetWriterInput
@@ -215,6 +224,7 @@ static AudioPlugin *_sharedInstance;
         if (![internalAudioWriterInput appendSampleBuffer:sampleBuffer]) {
             NSLog(@"Hauoli - Unable to write to audio input");
         }
+        NSLog(@"Hauoli - Writed data to audio input");
     }
 }
 @end

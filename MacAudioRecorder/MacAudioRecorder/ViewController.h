@@ -7,9 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "AudioPlugin.h"
 
 @interface ViewController : NSViewController
 
+- (IBAction)btnStartRecord:(id)sender;
+- (IBAction)btnStopRecord:(id)sender;
 
 @end
 
