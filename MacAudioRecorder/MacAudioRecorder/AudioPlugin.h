@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
     AVCaptureSession * recordSession;
     BOOL isRecording;
     AVAssetWriter * internalAudioWriter;
+    AVAssetWriterInput * internalAudioWriterInput;
 }
 
 +(AudioPlugin*) sharedInstance;
@@ -29,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setAudioMicInput;
 - (void) setAudioOutput;
 - (void) setAudioConnection;
+- (void) initAudioWriter;
 - (AVCaptureSession *)recordSession;
 
 

@@ -110,6 +110,40 @@ static AudioPlugin *_sharedInstance;
     }
 }
 
+// Initialize audio writer (must be called after setting up the audio input
+- (void) initAudioWriter
+{
+    NSLog(@"Hauoli - In function initAudioWriter.");
+    if(internalAudioWriter == nil) {
+        NSError * error = nil;
+        NSURL *url = [NSURL fileURLWithPath:@"/Users/lguan/Desktop/Hauoli/MacOSAudioRecorder/data/data.wav"];
+        internalAudioWriter = [[AVAssetWriter alloc] initWithURL:url
+                                  fileType:AVFileTypeWAVE
+                                     error:&error];
+        NSParameterAssert(internalAudioWriter);
+        
+        // Add the audio input
+        AudioChannelLayout acl;
+        bzero( &acl, sizeof(acl));
+        acl.mChannelLayoutTag = kAudioChannelLayoutTag_Mono;
+        
+        NSDictionary* audioOutputSettings = nil;
+        audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [ NSNumber numberWithInt: kAudioFormatLinearPCM ], AVFormatIDKey,
+                               [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
+                               [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
+                               [ NSNumber numberWithInt: 64000 ], AVEncoderBitRateKey,
+                               [ NSData dataWithBytes: &acl length: sizeof(acl) ], AVChannelLayoutKey,
+                               nil];
+        internalAudioWriterInput = [AVAssetWriterInput
+                             assetWriterInputWithMediaType: AVMediaTypeAudio
+                             outputSettings: audioOutputSettings];
+        internalAudioWriterInput.expectsMediaDataInRealTime = YES;
+        
+        [internalAudioWriter addInput:internalAudioWriterInput];
+    }
+}
+
 
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
