@@ -50,7 +50,7 @@ static AudioPlugin *_sharedInstance;
     internalAudioWriter = nil;
 }
 
-- (AVCaptureSession *) recordSession
+- (AVCaptureSession *) getRecordSession
 {
     NSLog(@"Hauoli - In function recordSession.");
     if(recordSession == nil) {
@@ -72,6 +72,37 @@ static AudioPlugin *_sharedInstance;
         [self setAudioConnection];
     }
     return recordSession;
+}
+
+- (void) audioPluginStartRecord
+{
+    NSLog(@"Hauoli - In function audioPluginStartRecord.");
+    if( !isRecording && recordSession == nil)
+    {
+        NSLog(@"Hauoli - Start video recording...");
+        recordSession = [self getRecordSession];
+        
+        [recordSession startRunning] ;
+        isRecording = YES;
+    }
+}
+
+- (void) audioPluginStopRecord
+{
+    NSLog(@"Hauoli - In function audioPluginStopRecord.");
+    if(isRecording && recordSession != nil) {
+        isRecording = NO;
+        
+        [recordSession stopRunning] ;
+        
+        [internalAudioWriter finishWritingWithCompletionHandler:^(){
+            NSLog (@"Hauoli - internalAudioWriter finished writing");
+        }];
+        
+        NSLog(@"Hauoli - Audio recording stopped");
+        // re-initialize all the modules
+        [self audioPluginInitAudioModule];
+    }
 }
 
 // Create audio connection (must be called after initializing audio output)
@@ -144,6 +175,9 @@ static AudioPlugin *_sharedInstance;
     }
 }
 
+/**************************************************************
+ ** Methods for writing the captured output to file
+ **************************************************************/
 
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
@@ -152,10 +186,35 @@ static AudioPlugin *_sharedInstance;
         return;
     }
     
-    if(isRecording == YES && connection == audioConnection) {
+    if(isRecording == YES) {
+        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+        if (internalAudioWriter.status != AVAssetWriterStatusWriting ) {
+            [internalAudioWriter startWriting];
+            [internalAudioWriter startSessionAtSourceTime:lastSampleTime];
+        }
         
+        if(captureOutput == audioOutput) {
+            [self newAudioSample:sampleBuffer];
+        }
     }
     
     
+}
+
+- (void)newAudioSample:(CMSampleBufferRef)sampleBuffer
+{
+    NSLog(@"Hauoli - In function newAudioSample");
+    if (isRecording) {
+        if (internalAudioWriter.status > AVAssetWriterStatusWriting) {
+            NSLog(@"Hauoli - Warning: writer status is %ld", internalAudioWriter.status);
+            if (internalAudioWriter.status == AVAssetWriterStatusFailed)
+                NSLog(@"Hauoli - Error: %@", internalAudioWriter.error);
+            return;
+        }
+        
+        if (![internalAudioWriterInput appendSampleBuffer:sampleBuffer]) {
+            NSLog(@"Hauoli - Unable to write to audio input");
+        }
+    }
 }
 @end

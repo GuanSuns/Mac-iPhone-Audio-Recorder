@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL isRecording;
     AVAssetWriter * internalAudioWriter;
     AVAssetWriterInput * internalAudioWriterInput;
+    CMTime lastSampleTime;
 }
 
 +(AudioPlugin*) sharedInstance;
@@ -31,8 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setAudioOutput;
 - (void) setAudioConnection;
 - (void) initAudioWriter;
-- (AVCaptureSession *)recordSession;
-
+- (AVCaptureSession *)getRecordSession;
+- (void)newAudioSample:(CMSampleBufferRef)sampleBuffer;
 
 @end
 
