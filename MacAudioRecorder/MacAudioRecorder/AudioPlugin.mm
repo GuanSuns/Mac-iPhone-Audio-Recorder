@@ -150,9 +150,11 @@ static AudioPlugin *_sharedInstance;
     NSLog(@"Hauoli - In function initAudioWriter.");
     if(internalAudioWriter == nil) {
         NSError * error = nil;
-        NSURL *url = [NSURL fileURLWithPath:@"data.wav"];
-        //NSURL * documentDirectoryUrl = [NSFileManager.defaultManager URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
-        //NSURL * url = [documentDirectoryUrl URLByAppendingPathComponent:@"data.wav"];
+        long timeStamp = (long)([[NSDate date] timeIntervalSince1970] * 1000);
+        NSString * strTimestamp = [NSString stringWithFormat:@"%ld", timeStamp];
+        NSString * fileSuffix = @"_data.wav";
+        NSURL * url = [NSURL fileURLWithPath: [strTimestamp stringByAppendingString:fileSuffix]];
+        NSLog(@"Hauoli - Audio writer will save data to file %@", [strTimestamp stringByAppendingString:fileSuffix]);
         
         internalAudioWriter = [[AVAssetWriter alloc] initWithURL:url
                                   fileType:AVFileTypeWAVE
@@ -212,7 +214,7 @@ static AudioPlugin *_sharedInstance;
 
 - (void)newAudioSample:(CMSampleBufferRef)sampleBuffer
 {
-    NSLog(@"Hauoli - In function newAudioSample");
+    // NSLog(@"Hauoli - In function newAudioSample");
     if (isRecording) {
         if (internalAudioWriter.status > AVAssetWriterStatusWriting) {
             NSLog(@"Hauoli - Warning: writer status is %ld", internalAudioWriter.status);
@@ -224,7 +226,7 @@ static AudioPlugin *_sharedInstance;
         if (![internalAudioWriterInput appendSampleBuffer:sampleBuffer]) {
             NSLog(@"Hauoli - Unable to write to audio input");
         }
-        NSLog(@"Hauoli - Writed data to audio input");
+        // NSLog(@"Hauoli - Writed data to audio input");
     }
 }
 @end

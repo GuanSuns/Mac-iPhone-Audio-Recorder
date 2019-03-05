@@ -12,7 +12,7 @@
 		4B91081C222C6059000748F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B91081B222C6059000748F5 /* Assets.xcassets */; };
 		4B91081F222C6059000748F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B91081D222C6059000748F5 /* Main.storyboard */; };
 		4B910822222C6059000748F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B910821222C6059000748F5 /* main.m */; };
-		4B91082B222C7BDB000748F5 /* AudioPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B91082A222C7BDB000748F5 /* AudioPlugin.m */; };
+		4B91082B222C7BDB000748F5 /* AudioPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B91082A222C7BDB000748F5 /* AudioPlugin.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 		4B910821222C6059000748F5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B910823222C6059000748F5 /* MacAudioRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacAudioRecorder.entitlements; sourceTree = "<group>"; };
 		4B910829222C7BDB000748F5 /* AudioPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioPlugin.h; sourceTree = "<group>"; };
-		4B91082A222C7BDB000748F5 /* AudioPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioPlugin.m; sourceTree = "<group>"; };
+		4B91082A222C7BDB000748F5 /* AudioPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioPlugin.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +70,7 @@
 				4B910821222C6059000748F5 /* main.m */,
 				4B910823222C6059000748F5 /* MacAudioRecorder.entitlements */,
 				4B910829222C7BDB000748F5 /* AudioPlugin.h */,
-				4B91082A222C7BDB000748F5 /* AudioPlugin.m */,
+				4B91082A222C7BDB000748F5 /* AudioPlugin.mm */,
 			);
 			path = MacAudioRecorder;
 			sourceTree = "<group>";
@@ -145,7 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B91081A222C6056000748F5 /* ViewController.m in Sources */,
-				4B91082B222C7BDB000748F5 /* AudioPlugin.m in Sources */,
+				4B91082B222C7BDB000748F5 /* AudioPlugin.mm in Sources */,
 				4B910822222C6059000748F5 /* main.m in Sources */,
 				4B910817222C6056000748F5 /* AppDelegate.m in Sources */,
 			);
