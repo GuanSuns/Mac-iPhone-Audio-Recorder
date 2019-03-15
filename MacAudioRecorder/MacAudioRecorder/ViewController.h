@@ -7,9 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "AudioPlugin.h"
+#import "AVFoundationPlugins/AudioPlugin.h"
+#import "AudioUnitPlugins/AudioUnitPlugin.h"
 
 @interface ViewController : NSViewController
+{
+    bool useAudioUnit;
+}
 
 - (IBAction)btnStartRecord:(id)sender;
 - (IBAction)btnStopRecord:(id)sender;

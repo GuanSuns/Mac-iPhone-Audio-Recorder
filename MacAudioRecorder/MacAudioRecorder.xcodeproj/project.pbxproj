@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4B17DE2F223AFE4300F2B656 /* AudioUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B17DE2D223AFE4300F2B656 /* AudioUtils.cpp */; };
+		4B17DE32223AFFFA00F2B656 /* AudioUnitPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B17DE31223AFFFA00F2B656 /* AudioUnitPlugin.mm */; };
 		4B910817222C6056000748F5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B910816222C6056000748F5 /* AppDelegate.m */; };
 		4B91081A222C6056000748F5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B910819222C6056000748F5 /* ViewController.m */; };
 		4B91081C222C6059000748F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B91081B222C6059000748F5 /* Assets.xcassets */; };
@@ -19,6 +20,8 @@
 /* Begin PBXFileReference section */
 		4B17DE2D223AFE4300F2B656 /* AudioUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AudioUtils.cpp; sourceTree = "<group>"; };
 		4B17DE2E223AFE4300F2B656 /* AudioUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AudioUtils.hpp; sourceTree = "<group>"; };
+		4B17DE30223AFFFA00F2B656 /* AudioUnitPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioUnitPlugin.h; sourceTree = "<group>"; };
+		4B17DE31223AFFFA00F2B656 /* AudioUnitPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioUnitPlugin.mm; sourceTree = "<group>"; };
 		4B910812222C6056000748F5 /* MacAudioRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacAudioRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B910815222C6056000748F5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4B910816222C6056000748F5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -49,8 +52,19 @@
 			children = (
 				4B17DE2D223AFE4300F2B656 /* AudioUtils.cpp */,
 				4B17DE2E223AFE4300F2B656 /* AudioUtils.hpp */,
+				4B17DE30223AFFFA00F2B656 /* AudioUnitPlugin.h */,
+				4B17DE31223AFFFA00F2B656 /* AudioUnitPlugin.mm */,
 			);
 			path = AudioUnitPlugins;
+			sourceTree = "<group>";
+		};
+		4B17DE33223B000E00F2B656 /* AVFoundationPlugins */ = {
+			isa = PBXGroup;
+			children = (
+				4B910829222C7BDB000748F5 /* AudioPlugin.h */,
+				4B91082A222C7BDB000748F5 /* AudioPlugin.mm */,
+			);
+			path = AVFoundationPlugins;
 			sourceTree = "<group>";
 		};
 		4B910809222C6056000748F5 = {
@@ -72,6 +86,7 @@
 		4B910814222C6056000748F5 /* MacAudioRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				4B17DE33223B000E00F2B656 /* AVFoundationPlugins */,
 				4B17DE2C223AFE2300F2B656 /* AudioUnitPlugins */,
 				4B910815222C6056000748F5 /* AppDelegate.h */,
 				4B910816222C6056000748F5 /* AppDelegate.m */,
@@ -82,8 +97,6 @@
 				4B910820222C6059000748F5 /* Info.plist */,
 				4B910821222C6059000748F5 /* main.m */,
 				4B910823222C6059000748F5 /* MacAudioRecorder.entitlements */,
-				4B910829222C7BDB000748F5 /* AudioPlugin.h */,
-				4B91082A222C7BDB000748F5 /* AudioPlugin.mm */,
 			);
 			path = MacAudioRecorder;
 			sourceTree = "<group>";
@@ -158,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B91081A222C6056000748F5 /* ViewController.m in Sources */,
+				4B17DE32223AFFFA00F2B656 /* AudioUnitPlugin.mm in Sources */,
 				4B91082B222C7BDB000748F5 /* AudioPlugin.mm in Sources */,
 				4B17DE2F223AFE4300F2B656 /* AudioUtils.cpp in Sources */,
 				4B910822222C6059000748F5 /* main.m in Sources */,

@@ -19,4 +19,5 @@ void tdav_codec_float_to_int16 (void *pInput, void* pOutput, uint8_t* pu1SampleS
 // Convert audio data in int64 to float
 void tdav_codec_int16_to_float (void *pInput, void* pOutput, uint8_t* pu1SampleSz, uint32_t* pu4TotalSz, bool bInt16);
 
+
 #endif /* AudioUtils_hpp */

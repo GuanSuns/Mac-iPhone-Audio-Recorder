@@ -14,6 +14,7 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view.
+    useAudioUnit = true;
 }
 
 
@@ -25,12 +26,22 @@
 
 
 - (IBAction)btnStartRecord:(id)sender {
-    AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
-    [audioPlugin audioPluginStartRecord];
+    if(useAudioUnit) {
+        AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
+        [audioUnitPlugin StartAudioRecordAndPlay];
+    } else {
+        AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
+        [audioPlugin audioPluginStartRecord];
+    }
 }
 
 - (IBAction)btnStopRecord:(id)sender {
-    AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
-    [audioPlugin audioPluginStopRecord];
+    if(useAudioUnit) {
+        AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
+        [audioUnitPlugin StopAudioRecordAndPlay];
+    } else {
+        AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
+        [audioPlugin audioPluginStopRecord];
+    }
 }
 @end
