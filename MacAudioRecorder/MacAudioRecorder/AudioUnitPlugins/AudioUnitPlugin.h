@@ -25,12 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
     AudioComponentInstance audioUnit;
     int kInputBus;
     int kOutputBus;
+    UInt32 preferredBufferSize; // will be calculated based on the input audio format (in bytes)
+    UInt32 size;
 
     NSCondition *mAudioLock;
 
+    bool isPlayback; // whether to play the recorded audio after 2 seconds
     int mDataLen;   // the size of pcm waited to be played
-    void *mPCMData; // the pcm data waited to be played
-
+    void * mPCMData; // the pcm data waited to be played
     NSMutableData* mRecordData; // put microphone data in buffer, wait 2 seconds and play it
 
     bool savemic;   // whether to save the microphone data into files (used to check if data collecting is correct)

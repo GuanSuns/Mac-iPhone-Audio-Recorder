@@ -8,16 +8,24 @@
 
 #import "AudioUnitPlugin.h"
 
-// helper function to check status code
+/**************************************************************
+ ** Helper function to check status code
+ **************************************************************/
 void checkStatus(int code, NSString* param = @""){
     if(code != 0 )
     {
-        NSLog(@"checkStatus error:%@: %d",  param, code );
+        NSLog(@"Hauoli - CheckStatus error:%@: %d",  param, code );
     }
 }
 
+/**************************************************************
+ ** Audio Unit Plugin Implementation
+ **************************************************************/
 @implementation AudioUnitPlugin
 
+// ========================================
+#pragma mark - SharedSInstance
+// ========================================
 static AudioUnitPlugin *_sharedInstance;
 
 +(AudioUnitPlugin*) sharedInstance
@@ -30,32 +38,65 @@ static AudioUnitPlugin *_sharedInstance;
     return _sharedInstance;
 }
 
+// ========================================
+#pragma mark - Initialization
+// ========================================
 - (id) init {
     self = [super init];
+    [self initParameters];
     
-    kInputBus = 1;
-    kOutputBus = 0;
-    mDataLen=0;
-    
-    savemic = false;
-    if( savemic )
-    {
-        mic = fopen( "/tmp/mic.pcm", "wb");
-    }
-    
+    // Initialize the buffer to store microphone data
     mRecordData = [[NSMutableData alloc] init];
     
+    // Initialize Voice Processing IO
     [self initVoiceProcessingIO];
     
     return self;
 }
 
-
--(void) initVoiceProcessingIO
-{
-    NSLog(@"Hauoli - AudioUnityPlugin in initVoiceProcessingIO.");
+// ========================================
+#pragma mark - Initialize related parameters
+// ========================================
+- (void) initParameters {
+    kInputBus = 1;
+    kOutputBus = 0;
+    mDataLen=0;
     
-    // Create audio unit module
+    isPlayback = true;
+    savemic = false;
+    if( savemic )
+    {
+        mic = fopen( "/tmp/mic.pcm", "wb");
+    }
+}
+
+// ===================================================
+#pragma mark - Initialize voice processing input and output
+// ===================================================
+- (void) initVoiceProcessingIO
+{
+    NSLog(@"Hauoli - initVoiceProcessingIO.");
+    
+    [self initAudioComponent];
+    [self initInputFormatAndProperty];
+    [self initOutputFormatAndProperty];
+    
+    // Initialize audio Unit
+    OSStatus status;
+    status = AudioUnitInitialize(audioUnit);
+    checkStatus(status);
+    
+    mPCMData = malloc(MAX_BUFFER_SIZE);
+    mAudioLock = [[NSCondition alloc]init];
+}
+
+// ========================================
+#pragma mark - Initialize audio component
+// ========================================
+- (void) initAudioComponent
+{
+    NSLog(@"Hauoli - initAudioComponent.");
+    
     OSStatus status;
     // Describe audio component
     AudioComponentDescription desc;
@@ -71,8 +112,16 @@ static AudioUnitPlugin *_sharedInstance;
     // Get audio units
     status = AudioComponentInstanceNew(inputComponent, &audioUnit);
     checkStatus(status, @"Get Audio Unit");
-    
-    
+}
+
+// =================================================
+#pragma mark - Initialize input format and property
+// =================================================
+- (void) initInputFormatAndProperty
+{
+    NSLog(@"Hauoli - initInputFormatAndProperty.");
+    OSStatus status;
+
 #if TARGET_OS_IPHONE
     // On Mac OS，input and output are open by default and we can't change it. Thus, we don't need to set input and output for Mac OS
     // Enable IO for recording
@@ -84,19 +133,7 @@ static AudioUnitPlugin *_sharedInstance;
                                   &flag,
                                   sizeof(flag));
     checkStatus(status， @"EnableIO, input");
-    
-    // Enable IO for playback
-    UInt32 zero = 1; // Set the value to 0 to close playback
-    status = AudioUnitSetProperty(audioUnit,
-                                  kAudioOutputUnitProperty_EnableIO,
-                                  kAudioUnitScope_Output,
-                                  kOutputBus,
-                                  &zero,
-                                  sizeof(zero));
-    checkStatus(status, @"EnableIO, output");
 #endif
-    
-    UInt32 size = 0;
     
     // Describe format
     AudioStreamBasicDescription audioFormat = {0};
@@ -119,9 +156,9 @@ static AudioUnitPlugin *_sharedInstance;
                                   &audioFormat,
                                   sizeof(audioFormat));
     
-    checkStatus( status, @"StreamFormat  input" );
+    checkStatus( status, @"Set input streamFormat" );
     
-    UInt32 preferredBufferSize = (( 20 * audioFormat.mSampleRate) / 1000); // in bytes
+    preferredBufferSize = (( 20 * audioFormat.mSampleRate) / 1000); // in bytes
     size = sizeof (preferredBufferSize);
     
     // Set input callback
@@ -134,7 +171,42 @@ static AudioUnitPlugin *_sharedInstance;
                                   kInputBus,
                                   &callbackStruct,
                                   sizeof(callbackStruct));
-    checkStatus(status, @"SetInputCallback");
+    checkStatus(status, @"Set input callback");
+    
+    // check wheter set the streamFormat successfully
+    size = sizeof(audioFormat);
+    status = AudioUnitGetProperty( audioUnit,
+                                  kAudioUnitProperty_StreamFormat,
+                                  kAudioUnitScope_Output,
+                                  kInputBus,
+                                  &audioFormat,
+                                  &size);
+    checkStatus(status, @"Check if set the input streamFormat successfully.");
+}
+
+// ===================================================
+#pragma mark - Initialize output format and property
+// ===================================================
+- (void) initOutputFormatAndProperty
+{
+    NSLog(@"Hauoli - initOutputFormatAndProperty.");
+    OSStatus status;
+    
+#if TARGET_OS_IPHONE
+    // On Mac OS，input and output are open by default and we can't change it. Thus, we don't need to set input and output for Mac OS
+    // Enable IO for playback
+    UInt32 zero = 1; // Set the value to 0 to close playback
+    if(!isPlayback) {
+        zero = 0;
+    }
+    status = AudioUnitSetProperty(audioUnit,
+                                  kAudioOutputUnitProperty_EnableIO,
+                                  kAudioUnitScope_Output,
+                                  kOutputBus,
+                                  &zero,
+                                  sizeof(zero));
+    checkStatus(status, @"EnableIO, output");
+#endif
     
     // We can use kAudioFormatFlagIsSignedInteger (int16) to record audio，but can't paly it
     // Thus, we use kAudioFormatFlagIsFloat for the output (need to convert the format when playing the audio)
@@ -155,29 +227,30 @@ static AudioUnitPlugin *_sharedInstance;
                                   kOutputBus,
                                   &audioFormatPlay,
                                   sizeof(audioFormatPlay));
-    checkStatus(status, @"StreamFormat Output");
+    checkStatus(status, @"Set output streamFormat");
     
     
     // Set buffer size for both Mac OS and iOS (but in different ways)
 #if TARGET_OS_OSX
     status = AudioUnitSetProperty ( audioUnit, kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0, &preferredBufferSize, size);
-    checkStatus(status, @"Set BufferFrameSize");
+    checkStatus(status, @"Set output BufferFrameSize");
     
     status = AudioUnitGetProperty ( audioUnit, kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0, &preferredBufferSize, &size);
     NSLog(@"buffer size:%d",preferredBufferSize );
-    checkStatus(status, @"Get BufferFrameSize");
+    checkStatus(status, @"Get output BufferFrameSize");
 #else
     Float32 duration = ( 20.0 / 1000.f); // in seconds
     UInt32 dsize = sizeof (duration);
     status = AudioSessionSetProperty (kAudioSessionProperty_PreferredHardwareIOBufferDuration, sizeof (duration), &duration);
-    checkStatus(status, "PreferredHardwareIOBufferDuration");
+    checkStatus(status, "Set output PreferredHardwareIOBufferDuration");
     
     status = AudioSessionGetProperty (kAudioSessionProperty_CurrentHardwareIOBufferDuration,&dsize, &duration );
-    checkStatus(status,"CurrentHardwareIOBufferDuration");
+    checkStatus(status,"Get output CurrentHardwareIOBufferDuration");
     NSLog(@"buffer time:%d",duration );
 #endif
     
     // Set output callback
+    AURenderCallbackStruct callbackStruct;
     callbackStruct.inputProc = playbackCallback;
     callbackStruct.inputProcRefCon = (__bridge void *)(self);
     status = AudioUnitSetProperty(audioUnit,
@@ -186,17 +259,9 @@ static AudioUnitPlugin *_sharedInstance;
                                   kOutputBus,
                                   &callbackStruct,
                                   sizeof(callbackStruct));
-    checkStatus(status, @"SetRenderCallback");
+    checkStatus(status, @"Set output RenderCallback");
     
     // check wheter set the streamFormat successfully
-    size = sizeof(audioFormat);
-    status = AudioUnitGetProperty( audioUnit,
-                                  kAudioUnitProperty_StreamFormat,
-                                  kAudioUnitScope_Output,
-                                  kInputBus,
-                                  &audioFormat,
-                                  &size);
-    
     size = sizeof(audioFormatPlay);
     status = AudioUnitGetProperty( audioUnit,
                                   kAudioUnitProperty_StreamFormat,
@@ -204,76 +269,24 @@ static AudioUnitPlugin *_sharedInstance;
                                   kOutputBus,
                                   &audioFormatPlay,
                                   &size);
-    
-    
-    // Initialise
-    status = AudioUnitInitialize(audioUnit);
-    checkStatus(status);
-    
-    mPCMData = malloc(MAX_BUFFER_SIZE);
-    mAudioLock = [[NSCondition alloc]init];
+    checkStatus(status, @"Check if set the output streamFormat successfully.");
 }
 
--(AudioComponentInstance) audioUnit{
-    return audioUnit;
-}
-
--(void *)audioBuffer{
-    return mPCMData;
-}
-
--(void)processAudio:(AudioBufferList *)bufferList{
-    [mAudioLock lock];
-    [mRecordData appendBytes: bufferList[0].mBuffers[0].mData length:bufferList[0].mBuffers[0].mDataByteSize];
-    [mAudioLock unlock];
-    
-    
-    // Paly the audio after 2 seconds
-    if( [mRecordData length] > SAMPLE_RATE * 4  )
-    {
-        [self play: mRecordData];
-        
-        [mAudioLock lock];
-        [mRecordData resetBytesInRange:NSMakeRange(0, [mRecordData length])];
-        [mRecordData setLength:0];
-        [mAudioLock unlock];
-    }
-}
-
--(void) play:(NSData *) data{
-    if(mPCMData == NULL){
-        return;
-    }
-    
-    [mAudioLock lock];
-    
-    static float* buff = new float[ SAMPLE_RATE * 4 ];
-    memset( buff, 0 , sizeof( float ) * SAMPLE_RATE * 4 );
-    uint8_t samplesize = 2;
-    uint32_t totalsize = [mRecordData length];
-    
-    tdav_codec_int16_to_float( (void*)[data bytes],  buff,  &samplesize, &totalsize,  1 );
-    
-    if (totalsize > 0 && totalsize + mDataLen < MAX_BUFFER_SIZE) {
-        memcpy( (char*)mPCMData+mDataLen, buff, totalsize );
-        mDataLen += totalsize;
-    }
-    
-    [mAudioLock unlock];
-}
-
--(void)StartAudioRecordAndPlay{
+- (void) StartAudioRecordAndPlay{
     NSLog(@"Hauoli - AudioUnityPlugin in StartAudioRecordAndPlay.");
     AudioOutputUnitStart(audioUnit);
     return ;
 }
 
--(void)StopAudioRecordAndPlay{
+- (void) StopAudioRecordAndPlay{
     NSLog(@"Hauoli - AudioUnityPlugin in StopAudioRecordAndPlay.");
     AudioOutputUnitStop(audioUnit);
     return ;
 }
 
+// ========================================
+#pragma mark - callback functions
+// ========================================
 static OSStatus recordingCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *ioActionFlags,
                                   const AudioTimeStamp *inTimeStamp,
@@ -354,5 +367,58 @@ static OSStatus playbackCallback(void *inRefCon,
     }
     return noErr;
 }
+
+
+// ========================================
+#pragma mark - internal functions
+// ========================================
+- (AudioComponentInstance) audioUnit{
+    return audioUnit;
+}
+
+- (void *) audioBuffer{
+    return mPCMData;
+}
+
+- (void) processAudio:(AudioBufferList *)bufferList{
+    [mAudioLock lock];
+    [mRecordData appendBytes: bufferList[0].mBuffers[0].mData length:bufferList[0].mBuffers[0].mDataByteSize];
+    [mAudioLock unlock];
+    
+    
+    // Paly the audio after 2 seconds
+    if( [mRecordData length] > SAMPLE_RATE * 4  )
+    {
+        [self play: mRecordData];
+        
+        [mAudioLock lock];
+        [mRecordData resetBytesInRange:NSMakeRange(0, [mRecordData length])];
+        [mRecordData setLength:0];
+        [mAudioLock unlock];
+    }
+}
+
+- (void) play:(NSData *) data{
+    if(mPCMData == NULL){
+        return;
+    }
+    
+    [mAudioLock lock];
+    
+    static float* buff = new float[ SAMPLE_RATE * 4 ];
+    memset( buff, 0 , sizeof( float ) * SAMPLE_RATE * 4 );
+    uint8_t samplesize = 2;
+    uint32_t totalsize = [mRecordData length];
+    
+    tdav_codec_int16_to_float( (void*)[data bytes],  buff,  &samplesize, &totalsize,  1 );
+    
+    if (totalsize > 0 && totalsize + mDataLen < MAX_BUFFER_SIZE) {
+        memcpy( (char*)mPCMData+mDataLen, buff, totalsize );
+        mDataLen += totalsize;
+    }
+    
+    [mAudioLock unlock];
+}
+
 
 @end
