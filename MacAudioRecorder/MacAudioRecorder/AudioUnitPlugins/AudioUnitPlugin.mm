@@ -43,8 +43,13 @@ static AudioUnitPlugin *_sharedInstance;
 // ========================================
 - (id) init {
     self = [super init];
-    [self initParameters];
     
+    [self initParameters];
+    if( savemic )
+    {
+        mic = fopen("/tmp/mic.pcm", "wb");
+        NSLog(@"Hauoli - Create PCM file: %d", mic != nullptr);
+    }
     // Initialize the buffer to store microphone data
     mRecordData = [[NSMutableData alloc] init];
     
@@ -63,11 +68,7 @@ static AudioUnitPlugin *_sharedInstance;
     mDataLen=0;
     
     isPlayback = true;
-    savemic = false;
-    if( savemic )
-    {
-        mic = fopen( "/tmp/mic.pcm", "wb");
-    }
+    savemic = true;
 }
 
 // ===================================================
@@ -99,6 +100,13 @@ static AudioUnitPlugin *_sharedInstance;
     
     OSStatus status;
     // Describe audio component
+    size_t bytesPerSample;
+#if TARGET_OS_OSX
+    bytesPerSample = sizeof(Float32);
+#else
+    bytesPerSample = sizeof(Int32);
+#endif
+    
     AudioComponentDescription desc;
     desc.componentType = kAudioUnitType_Output;
     desc.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
