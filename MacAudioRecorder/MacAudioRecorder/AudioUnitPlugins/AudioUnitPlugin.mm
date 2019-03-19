@@ -138,11 +138,11 @@ static AudioUnitPlugin *_sharedInstance;
     // Describe format
     AudioStreamBasicDescription audioFormat = {0};
     
-    audioFormat.mSampleRate = SAMPLE_RATE;
-    audioFormat.mFormatID = kAudioFormatLinearPCM;
+    audioFormat.mSampleRate = SAMPLE_RATE;  // Sampling Rate
+    audioFormat.mFormatID = kAudioFormatLinearPCM;  // PCM
     audioFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked |kAudioFormatFlagIsNonInterleaved;
-    audioFormat.mChannelsPerFrame = 1;
     audioFormat.mFramesPerPacket = 1;
+    audioFormat.mChannelsPerFrame = 1;  // 1 = mono, 2 = stereo
     audioFormat.mBitsPerChannel = 16;
     audioFormat.mBytesPerPacket = 2;
     audioFormat.mBytesPerFrame = 2;
