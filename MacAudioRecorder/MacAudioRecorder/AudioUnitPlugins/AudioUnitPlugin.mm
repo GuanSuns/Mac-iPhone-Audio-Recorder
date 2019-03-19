@@ -67,7 +67,7 @@ static AudioUnitPlugin *_sharedInstance;
     kOutputBus = 0;
     mDataLen=0;
     
-    isPlayback = true;
+    isPlayback = false;
     savemic = true;
 }
 
@@ -204,9 +204,6 @@ static AudioUnitPlugin *_sharedInstance;
     // On Mac OS，input and output are open by default and we can't change it. Thus, we don't need to set input and output for Mac OS
     // Enable IO for playback
     UInt32 zero = 1; // Set the value to 0 to close playback
-    if(!isPlayback) {
-        zero = 0;
-    }
     status = AudioUnitSetProperty(audioUnit,
                                   kAudioOutputUnitProperty_EnableIO,
                                   kAudioUnitScope_Output,
@@ -338,8 +335,9 @@ static OSStatus recordingCallback(void *inRefCon,
             fwrite( bufferList.mBuffers[0].mData, 1, bufferList.mBuffers[0].mDataByteSize, ars->mic );
         }
         
-        
-        [ars processAudio:&bufferList];
+        if( ars->isPlayback) {
+            [ars processAudio:&bufferList];
+        }
     }
     
     return noErr;
