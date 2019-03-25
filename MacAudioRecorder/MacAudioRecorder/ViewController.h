@@ -17,6 +17,8 @@
 
 - (IBAction)btnStartRecord:(id)sender;
 - (IBAction)btnStopRecord:(id)sender;
+- (IBAction)btnPlayAudio:(id)sender;
+- (IBAction)btnStopAudio:(id)sender;
 
 @end
 

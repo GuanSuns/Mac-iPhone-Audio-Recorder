@@ -44,4 +44,19 @@
         [audioPlugin audioPluginStopRecord];
     }
 }
+
+- (IBAction)btnPlayAudio:(id)sender {
+    if(useAudioUnit) {
+        AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
+        [audioUnitPlugin PlayWaveFile];
+    }
+}
+
+- (IBAction)btnStopAudio:(id)sender {
+    if(useAudioUnit) {
+        AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
+        [audioUnitPlugin StopPlayWaveFile];
+    }
+}
+
 @end

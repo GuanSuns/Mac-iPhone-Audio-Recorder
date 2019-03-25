@@ -100,12 +100,6 @@ static AudioUnitPlugin *_sharedInstance;
     
     OSStatus status;
     // Describe audio component
-    size_t bytesPerSample;
-#if TARGET_OS_OSX
-    bytesPerSample = sizeof(Float32);
-#else
-    bytesPerSample = sizeof(Int32);
-#endif
     
     AudioComponentDescription desc;
     desc.componentType = kAudioUnitType_Output;
@@ -155,6 +149,8 @@ static AudioUnitPlugin *_sharedInstance;
     audioFormat.mBytesPerPacket = 2;
     audioFormat.mBytesPerFrame = 2;
     audioFormat.mReserved = 0;
+    
+    NSLog(@"Hauoli - Input stream format: %d", audioFormat.mFormatFlags);
     
     // Apply format
     status = AudioUnitSetProperty(audioUnit,
@@ -218,13 +214,15 @@ static AudioUnitPlugin *_sharedInstance;
     AudioStreamBasicDescription audioFormatPlay = {0};
     audioFormatPlay.mSampleRate = SAMPLE_RATE;
     audioFormatPlay.mFormatID = kAudioFormatLinearPCM;
-    audioFormatPlay.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked |kAudioFormatFlagIsNonInterleaved ;
-    audioFormatPlay.mChannelsPerFrame = 1;
+    audioFormatPlay.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked |kAudioFormatFlagIsNonInterleaved;
     audioFormatPlay.mFramesPerPacket = 1;
+    audioFormatPlay.mChannelsPerFrame = 1;
     audioFormatPlay.mBitsPerChannel = 32;
     audioFormatPlay.mBytesPerPacket = 4;
     audioFormatPlay.mBytesPerFrame = 4;
     audioFormatPlay.mReserved = 0;
+    
+    NSLog(@"Hauoli - Ouput stream format: %d", audioFormatPlay.mFormatFlags);
     
     status = AudioUnitSetProperty(audioUnit,
                                   kAudioUnitProperty_StreamFormat,
@@ -411,19 +409,40 @@ static OSStatus playbackCallback(void *inRefCon,
     
     [mAudioLock lock];
     
-    static float* buff = new float[ SAMPLE_RATE * 4 ];
-    memset( buff, 0 , sizeof( float ) * SAMPLE_RATE * 4 );
-    uint8_t samplesize = 2;
+    static float* float_buff = new float[ SAMPLE_RATE * 4 ];
+    memset( float_buff, 0 , sizeof( float ) * SAMPLE_RATE * 4 );
+    
+    uint8_t int16_samplesize = 2;
     uint32_t totalsize = [mRecordData length];
     
-    tdav_codec_int16_to_float( (void*)[data bytes],  buff,  &samplesize, &totalsize,  1 );
+    tdav_codec_int16_to_float( (void*)[data bytes],  float_buff, &int16_samplesize, &totalsize,  1 );
     
     if (totalsize > 0 && totalsize + mDataLen < MAX_BUFFER_SIZE) {
-        memcpy( (char*)mPCMData+mDataLen, buff, totalsize );
+        memcpy( (char*)mPCMData+mDataLen, float_buff, totalsize );
         mDataLen += totalsize;
     }
     
     [mAudioLock unlock];
+}
+
+- (void) PlayWaveFile
+{
+    NSString *soundFilePath = [NSString stringWithFormat:@"%@/HauoliAudio1D.wav",[[NSBundle mainBundle] resourcePath]];
+    NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
+    
+    NSLog(soundFileURL.absoluteString);
+    
+    audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundFileURL error:nil];
+    audioPlayer.numberOfLoops = -1;
+    
+    [audioPlayer play];
+    NSLog(@"Hauoli - AVAudioPlayer begins play");
+}
+
+- (void) StopPlayWaveFile
+{
+    [audioPlayer stop];
+    NSLog(@"Hauoli - AVAudioPlayer stops play");
 }
 
 

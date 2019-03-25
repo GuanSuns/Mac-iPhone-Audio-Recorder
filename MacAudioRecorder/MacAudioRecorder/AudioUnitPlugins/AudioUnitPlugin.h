@@ -39,11 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 
     ExtAudioFileRef recordingfileref;
     FILE* mic;  // pcm data collected by the microphone
+    AVAudioPlayer *audioPlayer;
 }
 
 + (AudioUnitPlugin*) sharedInstance;
 - (void) StartAudioRecordAndPlay;
 - (void) StopAudioRecordAndPlay;
+- (void) PlayWaveFile;
+- (void) StopPlayWaveFile;
 
 @end
 

@@ -15,6 +15,7 @@
 		4B91081F222C6059000748F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B91081D222C6059000748F5 /* Main.storyboard */; };
 		4B910822222C6059000748F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B910821222C6059000748F5 /* main.m */; };
 		4B91082B222C7BDB000748F5 /* AudioPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B91082A222C7BDB000748F5 /* AudioPlugin.mm */; };
+		4BC967CF22499F570056DFC7 /* HauoliAudio1D.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4BC967CE22499F570056DFC7 /* HauoliAudio1D.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		4B910823222C6059000748F5 /* MacAudioRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacAudioRecorder.entitlements; sourceTree = "<group>"; };
 		4B910829222C7BDB000748F5 /* AudioPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioPlugin.h; sourceTree = "<group>"; };
 		4B91082A222C7BDB000748F5 /* AudioPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioPlugin.mm; sourceTree = "<group>"; };
+		4BC967CE22499F570056DFC7 /* HauoliAudio1D.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = HauoliAudio1D.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		4B910814222C6056000748F5 /* MacAudioRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				4BC967CE22499F570056DFC7 /* HauoliAudio1D.wav */,
 				4B17DE33223B000E00F2B656 /* AVFoundationPlugins */,
 				4B17DE2C223AFE2300F2B656 /* AudioUnitPlugins */,
 				4B910815222C6056000748F5 /* AppDelegate.h */,
@@ -160,6 +163,7 @@
 			files = (
 				4B91081C222C6059000748F5 /* Assets.xcassets in Resources */,
 				4B91081F222C6059000748F5 /* Main.storyboard in Resources */,
+				4BC967CF22499F570056DFC7 /* HauoliAudio1D.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
