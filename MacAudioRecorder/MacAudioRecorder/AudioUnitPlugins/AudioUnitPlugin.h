@@ -12,8 +12,6 @@
 #import <MediaToolbox/MediaToolbox.h>
 #import "AudioUtils.hpp"
 
-#define QUEUE_BUFFER_SIZE 4   // Number of buffer queue
-#define AUDIO_BUFFER_SIZE 372 // Audio Buffer Size
 #define MAX_BUFFER_SIZE 409600
 #define AUDIO_FRAME_SIZE 372
 #define SAMPLE_RATE 48000
@@ -45,8 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (AudioUnitPlugin*) sharedInstance;
 - (void) StartAudioRecordAndPlay;
 - (void) StopAudioRecordAndPlay;
-- (void) PlayWaveFile;
-- (void) StopPlayWaveFile;
+- (void) AvAudioPlayerPlayWaveFile;
+- (void) AvAudioPlayerStopPlayWaveFile;
 
 @end
 

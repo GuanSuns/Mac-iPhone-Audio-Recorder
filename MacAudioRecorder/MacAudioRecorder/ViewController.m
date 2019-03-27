@@ -48,14 +48,14 @@
 - (IBAction)btnPlayAudio:(id)sender {
     if(useAudioUnit) {
         AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
-        [audioUnitPlugin PlayWaveFile];
+        [audioUnitPlugin AvAudioPlayerPlayWaveFile];
     }
 }
 
 - (IBAction)btnStopAudio:(id)sender {
     if(useAudioUnit) {
         AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
-        [audioUnitPlugin StopPlayWaveFile];
+        [audioUnitPlugin AvAudioPlayerStopPlayWaveFile];
     }
 }
 

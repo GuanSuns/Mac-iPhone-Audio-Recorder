@@ -67,7 +67,7 @@ static AudioUnitPlugin *_sharedInstance;
     kOutputBus = 0;
     mDataLen=0;
     
-    isPlayback = false;
+    isPlayback = true;
     savemic = true;
 }
 
@@ -162,6 +162,7 @@ static AudioUnitPlugin *_sharedInstance;
     
     checkStatus( status, @"Set input streamFormat" );
     
+    
     preferredBufferSize = (( 20 * audioFormat.mSampleRate) / 1000); // in bytes
     size = sizeof (preferredBufferSize);
     
@@ -239,7 +240,7 @@ static AudioUnitPlugin *_sharedInstance;
     checkStatus(status, @"Set output BufferFrameSize");
     
     status = AudioUnitGetProperty ( audioUnit, kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0, &preferredBufferSize, &size);
-    NSLog(@"buffer size:%d",preferredBufferSize );
+    NSLog(@"buffer size:%d", preferredBufferSize );
     checkStatus(status, @"Get output BufferFrameSize");
 #else
     Float32 duration = ( 20.0 / 1000.f); // in seconds
@@ -391,7 +392,7 @@ static OSStatus playbackCallback(void *inRefCon,
     
     
     // Paly the audio after 2 seconds
-    if( [mRecordData length] > SAMPLE_RATE * 4  )
+    if( [mRecordData length] > SAMPLE_RATE * 0  )
     {
         [self play: mRecordData];
         
@@ -417,6 +418,7 @@ static OSStatus playbackCallback(void *inRefCon,
     
     tdav_codec_int16_to_float( (void*)[data bytes],  float_buff, &int16_samplesize, &totalsize,  1 );
     
+    NSLog(@"Data Size: %d", totalsize + mDataLen);
     if (totalsize > 0 && totalsize + mDataLen < MAX_BUFFER_SIZE) {
         memcpy( (char*)mPCMData+mDataLen, float_buff, totalsize );
         mDataLen += totalsize;
@@ -425,7 +427,7 @@ static OSStatus playbackCallback(void *inRefCon,
     [mAudioLock unlock];
 }
 
-- (void) PlayWaveFile
+- (void) AvAudioPlayerPlayWaveFile
 {
     NSString *soundFilePath = [NSString stringWithFormat:@"%@/HauoliAudio1D.wav",[[NSBundle mainBundle] resourcePath]];
     NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
@@ -439,7 +441,7 @@ static OSStatus playbackCallback(void *inRefCon,
     NSLog(@"Hauoli - AVAudioPlayer begins play");
 }
 
-- (void) StopPlayWaveFile
+- (void) AvAudioPlayerStopPlayWaveFile
 {
     [audioPlayer stop];
     NSLog(@"Hauoli - AVAudioPlayer stops play");

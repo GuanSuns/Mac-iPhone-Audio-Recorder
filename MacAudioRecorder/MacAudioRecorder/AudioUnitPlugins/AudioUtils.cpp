@@ -43,7 +43,7 @@ void tdav_codec_int16_to_float (void *pInput, void* pOutput, uint8_t* pu1SampleS
     if ( bInt16 && *pu1SampleSz == 2) {
         int16_t* pi2Buf = (int16_t*)pInput;
         for (int i = 0; i < i2SampleNumTotal; i++) {
-            pf4Buf[i] =    (float)pi2Buf[i] / 32767 ;  // int16 -> float
+            pf4Buf[i] = (float)pi2Buf[i] / 32767 ;  // int16 -> float
         }
         *pu4TotalSz *= 2;     // transfer to int16 byte size
         *pu1SampleSz *= 2;
