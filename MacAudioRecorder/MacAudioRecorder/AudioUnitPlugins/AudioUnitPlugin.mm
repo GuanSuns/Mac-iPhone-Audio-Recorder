@@ -418,7 +418,6 @@ static OSStatus playbackCallback(void *inRefCon,
     
     tdav_codec_int16_to_float( (void*)[data bytes],  float_buff, &int16_samplesize, &totalsize,  1 );
     
-    NSLog(@"Data Size: %d", totalsize + mDataLen);
     if (totalsize > 0 && totalsize + mDataLen < MAX_BUFFER_SIZE) {
         memcpy( (char*)mPCMData+mDataLen, float_buff, totalsize );
         mDataLen += totalsize;
