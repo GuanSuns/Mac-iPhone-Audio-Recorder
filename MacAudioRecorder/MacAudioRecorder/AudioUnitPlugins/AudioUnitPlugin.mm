@@ -87,6 +87,9 @@ static AudioUnitPlugin *_sharedInstance;
     status = AudioUnitInitialize(audioUnit);
     checkStatus(status);
     
+    // Check supported channels
+    [self checkSupportedChannels];
+    
     mPCMData = malloc(MAX_BUFFER_SIZE);
     mAudioLock = [[NSCondition alloc]init];
 }
@@ -99,8 +102,8 @@ static AudioUnitPlugin *_sharedInstance;
     NSLog(@"Hauoli - initAudioComponent.");
     
     OSStatus status;
-    // Describe audio component
     
+    // Describe audio component
     AudioComponentDescription desc;
     desc.componentType = kAudioUnitType_Output;
     desc.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
@@ -426,6 +429,25 @@ static OSStatus playbackCallback(void *inRefCon,
     [mAudioLock unlock];
 }
 
+
+// ========================================
+#pragma mark - helper functions
+// ========================================
+- (void) checkSupportedChannels
+{
+    AUChannelInfo desc;
+    UInt32 descSz = sizeof(AUChannelInfo);
+    memset(&desc, 0, descSz);
+    AudioUnitGetProperty(audioUnit, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global, 0, &desc, &descSz);
+    
+    NSLog(@"Hauoli - Supported input channel: %d", desc.inChannels);
+    NSLog(@"Hauoli - Supported output channel: %d", desc.outChannels);
+}
+
+
+// ========================================
+#pragma mark - functions for AVAudioPlayers
+// ========================================
 - (void) AvAudioPlayerPlayWaveFile
 {
     NSString *soundFilePath = [NSString stringWithFormat:@"%@/HauoliAudio1D.wav",[[NSBundle mainBundle] resourcePath]];

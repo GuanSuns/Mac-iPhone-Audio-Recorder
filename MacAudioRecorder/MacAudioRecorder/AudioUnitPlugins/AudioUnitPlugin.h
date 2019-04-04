@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (AudioUnitPlugin*) sharedInstance;
 - (void) StartAudioRecordAndPlay;
 - (void) StopAudioRecordAndPlay;
+
 - (void) AvAudioPlayerPlayWaveFile;
 - (void) AvAudioPlayerStopPlayWaveFile;
 

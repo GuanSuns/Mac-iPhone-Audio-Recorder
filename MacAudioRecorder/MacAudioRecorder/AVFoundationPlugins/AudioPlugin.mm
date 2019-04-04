@@ -170,7 +170,7 @@ static AudioPlugin *_sharedInstance;
         audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                [ NSNumber numberWithInt: kAudioFormatLinearPCM ], AVFormatIDKey,
                                [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
-                               [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
+                               [ NSNumber numberWithFloat: 48000.0 ], AVSampleRateKey,
                                [ NSNumber numberWithBool: NO], AVLinearPCMIsFloatKey,
                                [ NSNumber numberWithBool: NO], AVLinearPCMIsNonInterleaved,
                                [ NSNumber numberWithInt: 16], AVLinearPCMBitDepthKey,
