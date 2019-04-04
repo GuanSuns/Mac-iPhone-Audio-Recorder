@@ -14,7 +14,7 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view.
-    useAudioUnit = false;
+    usedTools = EnumPortAudio;
 }
 
 
@@ -26,34 +26,38 @@
 
 
 - (IBAction)btnStartRecord:(id)sender {
-    if(useAudioUnit) {
+    if(usedTools == EnumAudioUnit) {
         AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
         [audioUnitPlugin StartAudioRecordAndPlay];
-    } else {
+    } else if (usedTools == EnumAVFoundation) {
         AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
         [audioPlugin audioPluginStartRecord];
+    } else if (usedTools == EnumPortAudio) {
+        mainPortAudioPlugin();
     }
 }
 
 - (IBAction)btnStopRecord:(id)sender {
-    if(useAudioUnit) {
+    if(usedTools == EnumAudioUnit) {
         AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
         [audioUnitPlugin StopAudioRecordAndPlay];
-    } else {
+    } else if (usedTools == EnumAVFoundation) {
         AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
         [audioPlugin audioPluginStopRecord];
+    } else if (usedTools == EnumPortAudio) {
+        
     }
 }
 
 - (IBAction)btnPlayAudio:(id)sender {
-    if(useAudioUnit) {
+    if(usedTools == EnumAudioUnit) {
         AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
         [audioUnitPlugin AvAudioPlayerPlayWaveFile];
     }
 }
 
 - (IBAction)btnStopAudio:(id)sender {
-    if(useAudioUnit) {
+    if(usedTools == EnumAudioUnit) {
         AudioUnitPlugin *audioUnitPlugin = [AudioUnitPlugin sharedInstance];
         [audioUnitPlugin AvAudioPlayerStopPlayWaveFile];
     }

@@ -9,10 +9,17 @@
 #import <Cocoa/Cocoa.h>
 #import "AVFoundationPlugins/AudioPlugin.h"
 #import "AudioUnitPlugins/AudioUnitPlugin.h"
+#import "PortAudioPlugins/PortAudioPlugins.hpp"
+
+typedef enum {
+    EnumAVFoundation,
+    EnumAudioUnit,
+    EnumPortAudio
+} AudioTools;
 
 @interface ViewController : NSViewController
 {
-    bool useAudioUnit;
+    AudioTools usedTools;
 }
 
 - (IBAction)btnStartRecord:(id)sender;
