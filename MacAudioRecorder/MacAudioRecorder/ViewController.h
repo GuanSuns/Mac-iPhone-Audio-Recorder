@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "AVFoundationPlugins/AudioPlugin.h"
 #import "AudioUnitPlugins/AudioUnitPlugin.h"
-#import "PortAudioPlugins/PortAudioPlugins.hpp"
+#import "PortAudioPlugins/PortAudioPlugin.h"
 
 typedef enum {
     EnumAVFoundation,

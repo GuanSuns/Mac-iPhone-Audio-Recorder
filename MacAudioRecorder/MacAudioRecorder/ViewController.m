@@ -33,7 +33,8 @@
         AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
         [audioPlugin audioPluginStartRecord];
     } else if (usedTools == EnumPortAudio) {
-        mainPortAudioPlugin();
+        PortAudioPlugin * portAudioPlugin = [PortAudioPlugin sharedInstance];
+        [portAudioPlugin StartAudioRecordAndPlay];
     }
 }
 
@@ -45,7 +46,8 @@
         AudioPlugin * audioPlugin = [AudioPlugin sharedInstance];
         [audioPlugin audioPluginStopRecord];
     } else if (usedTools == EnumPortAudio) {
-        
+        PortAudioPlugin * portAudioPlugin = [PortAudioPlugin sharedInstance];
+        [portAudioPlugin StopAudioRecordAndPlay];
     }
 }
 

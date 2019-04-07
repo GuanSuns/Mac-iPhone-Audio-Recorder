@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B0082DA2255BBE200E093BD /* PortAudioPlugins.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B0082D82255BBE200E093BD /* PortAudioPlugins.cpp */; };
 		4B0082DD2255BD1300E093BD /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0082DC2255BD1300E093BD /* libportaudio.a */; };
 		4B17DE2F223AFE4300F2B656 /* AudioUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B17DE2D223AFE4300F2B656 /* AudioUtils.cpp */; };
 		4B17DE32223AFFFA00F2B656 /* AudioUnitPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B17DE31223AFFFA00F2B656 /* AudioUnitPlugin.mm */; };
+		4B86BC5E225A64FD000D59E0 /* played.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 4B86BC5D225A64FC000D59E0 /* played.pcm */; };
+		4B86BC69225A6EDF000D59E0 /* PortAudioPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4B86BC68225A6EDF000D59E0 /* PortAudioPlugin.mm */; };
 		4B910817222C6056000748F5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B910816222C6056000748F5 /* AppDelegate.m */; };
 		4B91081A222C6056000748F5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B910819222C6056000748F5 /* ViewController.m */; };
 		4B91081C222C6059000748F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B91081B222C6059000748F5 /* Assets.xcassets */; };
@@ -21,13 +22,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4B0082D82255BBE200E093BD /* PortAudioPlugins.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PortAudioPlugins.cpp; sourceTree = "<group>"; };
-		4B0082D92255BBE200E093BD /* PortAudioPlugins.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PortAudioPlugins.hpp; sourceTree = "<group>"; };
 		4B0082DC2255BD1300E093BD /* libportaudio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libportaudio.a; path = ../../../../../../usr/local/lib/libportaudio.a; sourceTree = "<group>"; };
 		4B17DE2D223AFE4300F2B656 /* AudioUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AudioUtils.cpp; sourceTree = "<group>"; };
 		4B17DE2E223AFE4300F2B656 /* AudioUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AudioUtils.hpp; sourceTree = "<group>"; };
 		4B17DE30223AFFFA00F2B656 /* AudioUnitPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioUnitPlugin.h; sourceTree = "<group>"; };
 		4B17DE31223AFFFA00F2B656 /* AudioUnitPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioUnitPlugin.mm; sourceTree = "<group>"; };
+		4B86BC5D225A64FC000D59E0 /* played.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = played.pcm; sourceTree = "<group>"; };
+		4B86BC67225A6EDF000D59E0 /* PortAudioPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PortAudioPlugin.h; sourceTree = "<group>"; };
+		4B86BC68225A6EDF000D59E0 /* PortAudioPlugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PortAudioPlugin.mm; sourceTree = "<group>"; };
 		4B910812222C6056000748F5 /* MacAudioRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacAudioRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B910815222C6056000748F5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4B910816222C6056000748F5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -58,8 +60,8 @@
 		4B0082D72255BBB000E093BD /* PortAudioPlugins */ = {
 			isa = PBXGroup;
 			children = (
-				4B0082D82255BBE200E093BD /* PortAudioPlugins.cpp */,
-				4B0082D92255BBE200E093BD /* PortAudioPlugins.hpp */,
+				4B86BC67225A6EDF000D59E0 /* PortAudioPlugin.h */,
+				4B86BC68225A6EDF000D59E0 /* PortAudioPlugin.mm */,
 			);
 			path = PortAudioPlugins;
 			sourceTree = "<group>";
@@ -119,8 +121,9 @@
 		4B910814222C6056000748F5 /* MacAudioRecorder */ = {
 			isa = PBXGroup;
 			children = (
-				4B0082D72255BBB000E093BD /* PortAudioPlugins */,
 				4BC967CE22499F570056DFC7 /* HauoliAudio1D.wav */,
+				4B86BC5D225A64FC000D59E0 /* played.pcm */,
+				4B0082D72255BBB000E093BD /* PortAudioPlugins */,
 				4B0F8F0B225181BA00891157 /* AudioQueues */,
 				4B17DE33223B000E00F2B656 /* AVFoundationPlugins */,
 				4B17DE2C223AFE2300F2B656 /* AudioUnitPlugins */,
@@ -197,6 +200,7 @@
 				4B91081C222C6059000748F5 /* Assets.xcassets in Resources */,
 				4B91081F222C6059000748F5 /* Main.storyboard in Resources */,
 				4BC967CF22499F570056DFC7 /* HauoliAudio1D.wav in Resources */,
+				4B86BC5E225A64FD000D59E0 /* played.pcm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,9 +213,9 @@
 			files = (
 				4B91081A222C6056000748F5 /* ViewController.m in Sources */,
 				4B17DE32223AFFFA00F2B656 /* AudioUnitPlugin.mm in Sources */,
+				4B86BC69225A6EDF000D59E0 /* PortAudioPlugin.mm in Sources */,
 				4B91082B222C7BDB000748F5 /* AudioPlugin.mm in Sources */,
 				4B17DE2F223AFE4300F2B656 /* AudioUtils.cpp in Sources */,
-				4B0082DA2255BBE200E093BD /* PortAudioPlugins.cpp in Sources */,
 				4B910822222C6059000748F5 /* main.m in Sources */,
 				4B910817222C6056000748F5 /* AppDelegate.m in Sources */,
 			);
