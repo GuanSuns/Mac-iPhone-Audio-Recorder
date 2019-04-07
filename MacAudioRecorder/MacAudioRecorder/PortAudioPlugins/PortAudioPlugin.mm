@@ -77,7 +77,7 @@ int playCallback( const void *inputBuffer, void *outputBuffer,
         return paComplete;
     } else {
         // move the play data pointer to expected pos
-        for(long i=0; i<playFrameIndex; i++) playedData++;
+        playedData = playedData + playFrameIndex;
         // write the data to output stream
         for(long i=0; i<framesCount; i++ ) {
             *ptrWrite++ = *playedData++;
