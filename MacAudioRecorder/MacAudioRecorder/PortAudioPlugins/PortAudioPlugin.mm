@@ -179,7 +179,9 @@ int initPortAudio(void)
         return 0;
     }
     
+    /* --------------------------------------------------- */
     /* ---------------  Start Output Stream  ------------- */
+    /* --------------------------------------------------- */
     err = Pa_StartStream(out_stream);
     if (err != paNoError) {
         fprintf(stderr, "Hauoli - Fail to start output stream.\n");

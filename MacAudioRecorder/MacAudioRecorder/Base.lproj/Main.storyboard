@@ -710,7 +710,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VfB-d0-FGU">
-                                <rect key="frame" x="109" y="183" width="158" height="32"/>
+                                <rect key="frame" x="29" y="164" width="158" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Start Recording" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gCx-Zm-IQ2">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -721,7 +721,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r7t-zL-WxS">
-                                <rect key="frame" x="109" y="137" width="158" height="32"/>
+                                <rect key="frame" x="29" y="125" width="158" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Stop Recording" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jja-gX-Dur">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -731,19 +731,8 @@
                                     <action selector="btnStopRecord:" target="XfG-lQ-9wD" id="9gQ-Ei-4lB"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pfI-EL-u8v">
-                                <rect key="frame" x="109" y="91" width="158" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Play Wave File" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="z2t-0b-uJ6">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="btnPlayAudio:" target="XfG-lQ-9wD" id="MH5-Xm-X0r"/>
-                                </connections>
-                            </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1XF-Hl-Dpk">
-                                <rect key="frame" x="109" y="46" width="158" height="32"/>
+                                <rect key="frame" x="29" y="46" width="158" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Stop Wave File" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oTu-TU-zA9">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -753,12 +742,63 @@
                                     <action selector="btnStopAudio:" target="XfG-lQ-9wD" id="F64-bW-z1a"/>
                                 </connections>
                             </button>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qgm-v0-8aW">
+                                <rect key="frame" x="221" y="168" width="130" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Port Audio" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="pUi-Xb-4Na" id="2Qc-OS-o3w">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="KWi-Z9-MLS">
+                                        <items>
+                                            <menuItem title="Port Audio" state="on" id="pUi-Xb-4Na"/>
+                                            <menuItem title="Audio Unit" id="Acg-ct-Du8"/>
+                                            <menuItem title="AVFoundation" id="mbo-Kb-Pmn"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="btnUpdateAudioTool:" target="XfG-lQ-9wD" id="LFJ-Qh-aXl"/>
+                                </connections>
+                            </popUpButton>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oMD-pr-BXo">
+                                <rect key="frame" x="222" y="130" width="129" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Input Device" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="CCN-wb-TqG" id="rtR-dR-Mk9">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="yEX-pF-taG">
+                                        <items>
+                                            <menuItem title="Input Device" state="on" id="CCN-wb-TqG"/>
+                                            <menuItem title="Item 2" id="zGc-bg-xrM"/>
+                                            <menuItem title="Item 3" id="ZtU-7A-egl"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="btnUpdateInputDevice:" target="XfG-lQ-9wD" id="Qkd-hH-2ZB"/>
+                                </connections>
+                            </popUpButton>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pfI-EL-u8v">
+                                <rect key="frame" x="29" y="86" width="158" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Play Wave File" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="z2t-0b-uJ6">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnPlayAudio:" target="XfG-lQ-9wD" id="MH5-Xm-X0r"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="btnAudioTools" destination="qgm-v0-8aW" id="q4r-Te-OPr"/>
+                        <outlet property="btnInputDevices" destination="oMD-pr-BXo" id="tcf-Md-7Bm"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="28" y="999"/>
+            <point key="canvasLocation" x="27.5" y="998.5"/>
         </scene>
     </scenes>
 </document>
