@@ -10,6 +10,12 @@
 - You can change the configuration of input format in PortAudioPlugin.h. However, the setting of output format is fixed (48000 sample rate, int16, 1 channel), since it need to be consistent with the format of the played pcm file.
 - The recorded pcm file will be played continuously and repeatedly. There seems to be a small gap when reaching the end of the pcm data. However, everything can be controlled by codes (you can see function playCallback). If we can generate audio using codes, there should be no gap in the loop.
 
+### Input and output devices
+- When the program starts, input and output devices info will be printed in the console.
+- The codes that query input and output devices are in the function loadDeviceInfo in file ViewController.m
+- I tried adding external microphones and speakers, but the number of devices returned by Pa\_GetDeviceCount stays the same, which means that PortAudio can only use the current input/output devices specified by the OS.
+- Although PortAudio can only use the current input/output devices specified by the OS, it is able to get avaliable settings of the default input/output devices. For example, PortAudio is able to get all the avaliable Sample Rates and numbers of channels supported by the device.
+
 ### Tips on installing PortAudio on Mac
 To use test it on Mac:
 
