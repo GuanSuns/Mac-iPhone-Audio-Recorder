@@ -12,6 +12,9 @@ PaStream *in_stream;
 PaStream *out_stream;
 paUserData userData;
 
+int playedSampleSampleRate = 96000;
+int playedSampleLen = 10;
+
 // ===================================================
 #pragma mark - Record Callback
 // ===================================================
@@ -64,7 +67,7 @@ int playCallback( const void *inputBuffer, void *outputBuffer,
                  void *userData )
 {
     paUserData *pUserData = (paUserData*)userData;
-    long totalFrames = 10*48000*1;
+    long totalFrames = playedSampleLen*playedSampleSampleRate*1;
     long playFrameIndex = pUserData->playFrameIndex;
     
     int16_t * playedData = pUserData->playedSamples;
@@ -137,7 +140,7 @@ int initPortAudio(void)
     err = Pa_OpenStream(&in_stream,
                         &inputParameters,
                         NULL,                  /* &outputParameters, */
-                        SAMPLE_RATE,
+                        PORTAUDIO_SAMPLE_RATE,
                         FRAMES_PER_BUFFER,
                         paClipOff,      /* we won't output out of range samples so don't bother clipping them */
                         recordCallback,
@@ -168,7 +171,7 @@ int initPortAudio(void)
     err = Pa_OpenStream( &out_stream,
                         NULL, /* no input */
                         &outputParameters,
-                        48000,
+                        playedSampleSampleRate,
                         FRAMES_PER_BUFFER,
                         paClipOff,      /* we won't output out of range samples so don't bother clipping them */
                         playCallback,
@@ -267,7 +270,7 @@ int initPaUserData(paUserData * userData)
     long                numBytes;
     
     // init user data (used to save audio to file)
-    userData->maxFrameIndex = NUM_SECONDS * SAMPLE_RATE; /* Record for a few seconds. */
+    userData->maxFrameIndex = NUM_SECONDS * PORTAUDIO_SAMPLE_RATE; /* Record for a few seconds. */
     totalFrames = userData->maxFrameIndex;
     userData->totalFrames = totalFrames;
     userData->recordFrameIndex = 0;
@@ -314,12 +317,12 @@ static PortAudioPlugin *_sharedInstance;
 // ========================================
 - (void) LoadPlayedSample
 {
-    NSString *soundFilePath = [NSString stringWithFormat:@"%@/played.pcm",[[NSBundle mainBundle] resourcePath]];
+    NSString *soundFilePath = [NSString stringWithFormat:@"%@/test_sample_mono.wav",[[NSBundle mainBundle] resourcePath]];
     NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
     NSData *dataBuffer = [NSData dataWithContentsOfURL:soundFileURL];
     
     int16_t *values = (int16_t *)[dataBuffer bytes];
-    userData.playedSamples = (int16_t *) malloc(10*48000*1*sizeof(int16_t));
+    userData.playedSamples = (int16_t *) malloc(playedSampleSampleRate*playedSampleLen*1*sizeof(int16_t));
     if(userData.playedSamples == NULL) {
         printf("Hauoli - Could not allocate play array.\n");
         fflush(stdout);
@@ -327,9 +330,7 @@ static PortAudioPlugin *_sharedInstance;
     }
     
     int16_t* ptrWrite = userData.playedSamples;
-    for(long i=0; i<10*48000*1; i++) {
-        *ptrWrite++ = *values++;
-    }
+    readWavToPCM(ptrWrite, values, playedSampleSampleRate*playedSampleLen*1);
     
     userData.playFrameIndex = 0;
 }

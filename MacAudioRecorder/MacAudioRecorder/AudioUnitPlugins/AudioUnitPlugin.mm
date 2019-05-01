@@ -450,7 +450,7 @@ static OSStatus playbackCallback(void *inRefCon,
 // ========================================
 - (void) AvAudioPlayerPlayWaveFile
 {
-    NSString *soundFilePath = [NSString stringWithFormat:@"%@/HauoliAudio1D.wav",[[NSBundle mainBundle] resourcePath]];
+    NSString *soundFilePath = [NSString stringWithFormat:@"%@/test_sample_mono.wav",[[NSBundle mainBundle] resourcePath]];
     NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
     
     NSLog(soundFileURL.absoluteString);

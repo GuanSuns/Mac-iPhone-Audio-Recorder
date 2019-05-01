@@ -11,10 +11,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <portaudio.h>
+#include "WavFileProcessor.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define SAMPLE_RATE  (48000)
+#define PORTAUDIO_SAMPLE_RATE  (96000)
 #define NUM_CHANNELS    (1)
 #define FRAMES_PER_BUFFER (512)
 #define NUM_SECONDS     (20)
