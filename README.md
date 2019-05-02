@@ -1,5 +1,9 @@
 # Mac-iPhone-Audio-Recorder
 
+## Core Audio
+### Description
+- Automatically set the format (sample rate) of IO devices to specific value (in function coreAudioConfigIODevices in file  IODevicesConfigurator/IODeviceConfigurator.h)
+
 
 ## PortAudio Plugin
 
