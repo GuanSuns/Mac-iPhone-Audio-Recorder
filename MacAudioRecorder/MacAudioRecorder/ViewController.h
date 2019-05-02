@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <portaudio.h>
+#import "IODevicesConfigurator/IODeviceConfigurator.h"
 #import "AVFoundationPlugins/AudioPlugin.h"
 #import "AudioUnitPlugins/AudioUnitPlugin.h"
 #import "PortAudioPlugins/PortAudioPlugin.h"
@@ -17,8 +17,6 @@ typedef enum {
     EnumAudioUnit,
     EnumPortAudio
 } AudioTools;
-
-void PrintSupportedStandardSampleRates( const PaStreamParameters *inputParameters, const PaStreamParameters *outputParameters );
 
 @interface ViewController : NSViewController
 {
