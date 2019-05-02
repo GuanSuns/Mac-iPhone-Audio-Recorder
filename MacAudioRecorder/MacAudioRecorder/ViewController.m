@@ -16,6 +16,7 @@
     // Do any additional setup after loading the view.
     usedTools = EnumPortAudio;
     loadIODeviceInfo();
+    coreAudioConfigIODevices();
 }
 
 

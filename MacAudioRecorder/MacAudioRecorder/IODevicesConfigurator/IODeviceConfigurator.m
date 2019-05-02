@@ -8,6 +8,88 @@
 
 #import "IODeviceConfigurator.h"
 
+// ===================================================
+#pragma mark - Use Core Audio to set the format of output device
+// ===================================================
+bool coreAudioConfigIODevices() {
+    AudioObjectPropertyAddress  propertyAddress;
+    AudioObjectID               *deviceIDs;
+    UInt32                      propertySize;
+    NSInteger                   numDevices;
+    
+    
+    propertyAddress.mSelector = kAudioHardwarePropertyDevices;
+    propertyAddress.mScope = kAudioObjectPropertyScopeGlobal;
+    propertyAddress.mElement = kAudioObjectPropertyElementMaster;
+    
+    // enumerate all current/valid devices
+    if (AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &propertyAddress, 0, NULL, &propertySize) == noErr)
+    {
+        numDevices = propertySize / sizeof(AudioDeviceID);
+        NSLog(@"Hauoli - Number of devices: %d", (int)numDevices);
+        deviceIDs = (AudioDeviceID *)calloc(numDevices, sizeof(AudioDeviceID));
+        
+        if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &propertyAddress, 0, NULL, &propertySize, deviceIDs) == noErr)
+        {
+            AudioObjectPropertyAddress      deviceAddress;
+            char                            deviceName[64];
+            char                            manufacturerName[64];
+            
+            // Print out all the output device info
+            // numDevices should be 2 since Mac only allow configure the default IO devices
+            for (NSInteger idx=0; idx<numDevices; idx++) {
+                propertySize = sizeof(deviceName);
+                deviceAddress.mSelector = kAudioDevicePropertyDeviceName;
+                deviceAddress.mScope = kAudioObjectPropertyScopeGlobal;
+                deviceAddress.mElement = kAudioObjectPropertyElementMaster;
+                
+                // Fetch device detail
+                if (AudioObjectGetPropertyData(deviceIDs[idx], &deviceAddress, 0, NULL, &propertySize, deviceName) == noErr)
+                {
+                    propertySize = sizeof(manufacturerName);
+                    deviceAddress.mSelector = kAudioDevicePropertyDeviceManufacturer;
+                    deviceAddress.mScope = kAudioObjectPropertyScopeGlobal;
+                    deviceAddress.mElement = kAudioObjectPropertyElementMaster;
+                    
+                    if (AudioObjectGetPropertyData(deviceIDs[idx], &deviceAddress, 0, NULL, &propertySize, manufacturerName) == noErr)
+                    {
+                        CFStringRef uidString;
+                        
+                        propertySize = sizeof(uidString);
+                        deviceAddress.mSelector = kAudioDevicePropertyDeviceUID;
+                        deviceAddress.mScope = kAudioObjectPropertyScopeGlobal;
+                        deviceAddress.mElement = kAudioObjectPropertyElementMaster;
+                        if (AudioObjectGetPropertyData(deviceIDs[idx], &deviceAddress, 0, NULL, &propertySize, &uidString) == noErr) {
+                            
+                            NSLog(@"IO device name: %s, manufacturer: %s, id: %@", deviceName, manufacturerName, uidString);
+                            CFRelease(uidString);
+                            
+                            // Set the sample rate of the device
+                            UInt32 size = sizeof(Float64);
+                            Float64 sampleRate = IO_DEVICE_SAMPLE_RATE;
+                            OSStatus err = noErr;
+                            
+                            AudioObjectPropertyAddress deviceSampleRateAddress = { kAudioDevicePropertyNominalSampleRate, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+                            err = AudioObjectSetPropertyData(deviceIDs[idx], &deviceSampleRateAddress, 0, NULL, size, &sampleRate);
+                            
+                            if(err != noErr) {
+                                NSLog(@"Hauoli - Fail to set smaple rate of the IO device: %s.", deviceName);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        free(deviceIDs);
+    }
+    return false;
+}
+
+
+// ===================================================
+#pragma mark - Use PortAudio to list all IO devices
+// ===================================================
 void printSupportedStandardSampleRates( const PaStreamParameters *inputParameters, const PaStreamParameters *outputParameters )
 {
     static double standardSampleRates[] = {
@@ -144,3 +226,4 @@ void loadIODeviceInfo() {
     Pa_Terminate();
     printf("\n----------------------------\n\n");
 }
+
