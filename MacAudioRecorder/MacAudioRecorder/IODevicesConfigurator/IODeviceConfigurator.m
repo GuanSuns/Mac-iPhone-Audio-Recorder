@@ -61,20 +61,53 @@ bool coreAudioConfigIODevices() {
                         deviceAddress.mElement = kAudioObjectPropertyElementMaster;
                         if (AudioObjectGetPropertyData(deviceIDs[idx], &deviceAddress, 0, NULL, &propertySize, &uidString) == noErr) {
                             
-                            NSLog(@"IO device name: %s, manufacturer: %s, id: %@", deviceName, manufacturerName, uidString);
+                            NSLog(@"Hauoli - IO device name: %s, manufacturer: %s, id: %@", deviceName, manufacturerName, uidString);
                             CFRelease(uidString);
                             
                             // Set the sample rate of the device
-                            UInt32 size = sizeof(Float64);
+                            propertySize = sizeof(Float64);
                             Float64 sampleRate = IO_DEVICE_SAMPLE_RATE;
                             OSStatus err = noErr;
                             
-                            AudioObjectPropertyAddress deviceSampleRateAddress = { kAudioDevicePropertyNominalSampleRate, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
-                            err = AudioObjectSetPropertyData(deviceIDs[idx], &deviceSampleRateAddress, 0, NULL, size, &sampleRate);
+                            deviceAddress.mSelector = kAudioDevicePropertyNominalSampleRate;
+                            // err = AudioObjectSetPropertyData(deviceIDs[idx], &deviceAddress, 0, NULL, propertySize, &sampleRate);
                             
                             if(err != noErr) {
                                 NSLog(@"Hauoli - Fail to set smaple rate of the IO device: %s.", deviceName);
                             }
+                            
+                            AudioStreamBasicDescription fmt;
+                            propertySize = sizeof (fmt);
+                            deviceAddress.mSelector = kAudioDevicePropertyStreamFormat;
+                            err = AudioObjectGetPropertyData(deviceIDs[idx], &deviceAddress, 0, NULL, &propertySize, &fmt);
+                            if (err == noErr) {
+                                NSLog(@"Hauoli - Original channel per frame of device %s: %d\n", deviceName, fmt.mChannelsPerFrame);
+                                
+                                fmt.mChannelsPerFrame = 2;
+                                fmt.mSampleRate = IO_DEVICE_SAMPLE_RATE;
+                                
+                                err = AudioDeviceSetProperty(deviceIDs[idx], NULL, 0, NO, kAudioDevicePropertyStreamFormat, propertySize, &fmt);
+                                if(err != noErr) {
+                                    NSLog(@"Hauoli - Fail to set mChannelsPerFrame of the IO device: %s.", deviceName);
+                                }
+                            } else {
+                                NSLog(@"Fail to fetch stream format: %s.", deviceName);
+                            }
+
+                            
+                            /*
+                            AudioBufferList bufferList;
+                            int propertySize = sizeof(bufferList);
+                            AudioDeviceGetProperty(deviceIDs[idx], 0, YES,
+                                                   kAudioDevicePropertyStreamConfiguration,
+                                                   &propertySize, &bufferList);
+                            if (bufferList.mNumberBuffers > 0) {
+                                int inChannels = bufferList.mBuffers[0].mNumberChannels;
+                                NSLog(@"Number of inChannels: %d\n", inChannels);
+                            } else {
+                                NSLog(@"There is no input channel for this device.\n");
+                            }
+                             */
                         }
                     }
                 }
